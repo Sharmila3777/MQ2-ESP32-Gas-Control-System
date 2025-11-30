@@ -1,0 +1,39 @@
+#define MQ2_PIN 34         // MQ-2 Analog Output Pin
+#define BUZZER_PIN 27      // Buzzer Pin
+#define RED_LED 26         // Danger LED
+#define GREEN_LED 25       // Safe LED
+#define GAS_THRESHOLD 600  // Gas Alarm Level
+
+void setup() {
+  pinMode(RED_LED, OUTPUT);
+  pinMode(GREEN_LED, OUTPUT);
+  pinMode(BUZZER_PIN, OUTPUT);
+
+  Serial.begin(115200);
+  Serial.println("Gas Monitoring Started...");
+}
+
+void loop() {
+  int gasValue = analogRead(MQ2_PIN);  // Read MQ-2 Sensor
+  Serial.print("Gas Value: ");
+  Serial.println(gasValue);
+
+  // Gas Leak Detected
+  if (gasValue > GAS_THRESHOLD) {
+    digitalWrite(RED_LED, HIGH);
+    digitalWrite(GREEN_LED, LOW);
+    digitalWrite(BUZZER_PIN, HIGH);
+
+    Serial.println("GAS LEAK DETECTED!");
+  }
+  // Safe Condition
+  else {
+    digitalWrite(RED_LED, LOW);
+    digitalWrite(GREEN_LED, HIGH);
+    digitalWrite(BUZZER_PIN, LOW);
+
+    Serial.println("Safe - No Gas Detected.");
+  }
+
+  delay(1000);  // Read every 1 second
+}
